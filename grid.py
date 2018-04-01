@@ -51,9 +51,6 @@ class Grid():
     def set_initial_grid(self):
         self.initial_grid = self.grilla.copy()
 
-    def get_initial_player(self):
-        return self.initial_player
-
     def random_posicion_jugador(self):
         "Guarda la posicion y coloca el valor guarda la posicion de Jugador"
         while True:
@@ -62,6 +59,8 @@ class Grid():
             if self.grilla[pos_y][pos_x] == 0:
                 self.jugador.set_posicion_x(pos_x)
                 self.jugador.set_posicion_y(pos_y)
+                self.jugador.set_posicion_initial_x(pos_x)
+                self.jugador.set_posicion_initial_y(pos_y)
                 self.grilla[pos_y][pos_x] = self.jugador.get_value()
                 break
 
@@ -153,11 +152,15 @@ class Grid():
         pass
 
     def update_grid(self):
-        pos_x = self.jugador.get_posicion_x()
-        pos_y = self.jugador.get_posicion_y()
+        pos_x_player = self.jugador.get_posicion_x()
+        pos_y_player = self.jugador.get_posicion_y()
         self.grilla = self.initial_grid.copy()
         self.grilla[self.grilla == self.jugador.get_value()] = 1
-        self.grilla[pos_y][pos_x] = self.jugador.get_value()
+        self.grilla[pos_y_player][pos_x_player] = self.jugador.get_value()
+        pos_x_tesoro = self.tesoro.get_posicion_x()
+        pos_y_tesoro = self.tesoro.get_posicion_y()
+        self.grilla[self.grilla == self.tesoro.get_value()] = 1
+        self.grilla[pos_y_tesoro][pos_x_tesoro] = self.tesoro.get_value()
 
     def __str__(self):
         stringGrilla = ""
