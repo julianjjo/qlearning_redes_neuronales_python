@@ -67,7 +67,7 @@ def main():
         recompensaEpisodio = recompensaEpisodio + recompensa
         if done is True:
             break
-    print("Recompensa: ",recompensaEpisodio)
+    print("Recompensa: ", recompensaEpisodio)
 
 
 if __name__ == '__main__':
