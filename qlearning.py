@@ -4,7 +4,6 @@ from grid import Grid
 from entorno import Entorno
 
 
-
 def main():
     minLearningRate = 0.1
     maxLearningRate = 1.0
@@ -19,7 +18,7 @@ def main():
     grid = Grid(size_x, size_y)
 
     while True:
-        grid.get_random_grid()
+        grid.set_random_grid()
         print(grid)
         parar = input('Parar y/n: ')
         if parar == "y":

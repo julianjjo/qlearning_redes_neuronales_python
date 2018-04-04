@@ -6,11 +6,11 @@ class ObjetoGrilla:
         self.pos_x = pos_x
         self.pos_y = pos_y
 
-    def get_value(self):
-        return self.value
+    def get_tipo(self):
+        return self.tipo
 
-    def set_value(self, value):
-        self.value = value
+    def set_tipo(self, tipo):
+        self.tipo = tipo
 
     def get_posicion_x(self):
         return self.pos_x

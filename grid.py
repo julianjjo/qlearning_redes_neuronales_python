@@ -3,18 +3,20 @@ import random
 import copy
 from jugador import Jugador
 from tesoro import Tesoro
+from obstaculo import Obstaculo
 
 
 class Grid():
     """Esta clase genera la grilla del el laberito"""
 
-    def __init__(self, size_x, size_y, jugador=Jugador, tesoro=Tesoro):
+    def __init__(self, size_x, size_y):
         self.size_x = size_x
         self.size_y = size_y
         self.last_pos_x = self.size_x - 1
         self.last_pos_y = self.size_y - 1
         self.jugador = Jugador()
         self.tesoro = Tesoro()
+        self.obstaculo = Obstaculo()
 
     def get_grilla(self):
         return self.grilla
@@ -24,7 +26,7 @@ class Grid():
 
     def generate_grilla_vacia(self):
         "Este metodo genera la grilla vacia"
-        self.grilla = np.empty([self.size_y, self.size_x], dtype=int)
+        self.grilla = np.empty([self.size_y, self.size_x], dtype=float)
         self.grilla.fill(0)
 
     def set_jugador(self, jugador_new=Jugador):
@@ -38,6 +40,12 @@ class Grid():
 
     def get_tesoro(self):
         return self.tesoro
+
+    def set_obstaculo(self, obstaculo_new=Jugador):
+        self.obstaculo = obstaculo_new
+
+    def get_obstaculo(self):
+        return self.obstaculo
 
     def get_last_pos_x(self):
         return self.last_pos_x
@@ -61,7 +69,7 @@ class Grid():
                 self.jugador.set_posicion_y(pos_y)
                 self.jugador.set_posicion_initial_x(pos_x)
                 self.jugador.set_posicion_initial_y(pos_y)
-                self.grilla[pos_y][pos_x] = self.jugador.get_value()
+                self.grilla[pos_y][pos_x] = self.jugador.get_tipo()
                 break
 
     def random_posicion_tesoro(self):
@@ -72,7 +80,7 @@ class Grid():
             if self.grilla[pos_y][pos_x] == 0:
                 self.tesoro.set_posicion_x(pos_x)
                 self.tesoro.set_posicion_y(pos_y)
-                self.grilla[pos_y][pos_x] = self.tesoro.get_value()
+                self.grilla[pos_y][pos_x] = self.tesoro.get_tipo()
                 break
 
     def accion_aleatoria(self, pos_x, pos_y):
@@ -102,7 +110,8 @@ class Grid():
                 pos_y += 1
         try:
             desface_hacia_abajo = pos_x < 0 or pos_y < 0
-            desface_hacia_arriba = pos_x > self.last_pos_x or pos_y > self.last_pos_y
+            desface_hacia_arriba = (pos_x >
+                                    self.last_pos_x or pos_y > self.last_pos_y)
             if desface_hacia_abajo or desface_hacia_arriba:
                 raise IndexError()
             pos_x = pos_x
@@ -114,7 +123,7 @@ class Grid():
 
     def generar_camino(self, pos_x=0, pos_y=0):
         pos_x, pos_y = self.accion_aleatoria(pos_x, pos_y)
-        if self.grilla[pos_y][pos_x] == self.tesoro.get_value():
+        if self.grilla[pos_y][pos_x] == self.tesoro.get_tipo():
             return pos_x, pos_y
         else:
             if self.grilla[pos_y][pos_x] == 0:
@@ -134,13 +143,13 @@ class Grid():
             pos_x = random.randint(0, (self.size_x - 1))
             pos_y = random.randint(0, (self.size_y - 1))
             if self.grilla[pos_y][pos_x] == 0:
-                self.grilla[pos_y][pos_x] = -1
+                self.grilla[pos_y][pos_x] = self.obstaculo.get_tipo()
 
     def rellenar_espacios_en_blanco(self):
         self.grilla[self.grilla == 0] = 1
         pass
 
-    def get_random_grid(self):
+    def set_random_grid(self):
         self.generate_grilla_vacia()
         self.random_posicion_jugador()
         self.random_posicion_tesoro()
@@ -148,31 +157,36 @@ class Grid():
             self.jugador.get_posicion_x(), self.jugador.get_posicion_y())
         self.generar_obstaculos()
         self.rellenar_espacios_en_blanco()
+        self.set_cero_espacios_vacios()
         self.set_initial_grid()
+        pass
+
+    def set_cero_espacios_vacios(self):
+        self.grilla[self.grilla == 1] = 0
         pass
 
     def update_grid(self):
         pos_x_player = self.jugador.get_posicion_x()
         pos_y_player = self.jugador.get_posicion_y()
         self.grilla = self.initial_grid.copy()
-        self.grilla[self.grilla == self.jugador.get_value()] = 1
-        self.grilla[pos_y_player][pos_x_player] = self.jugador.get_value()
+        self.grilla[self.grilla == self.jugador.get_tipo()] = 0
+        self.grilla[pos_y_player][pos_x_player] = self.jugador.get_tipo()
         pos_x_tesoro = self.tesoro.get_posicion_x()
         pos_y_tesoro = self.tesoro.get_posicion_y()
-        self.grilla[self.grilla == self.tesoro.get_value()] = 1
-        self.grilla[pos_y_tesoro][pos_x_tesoro] = self.tesoro.get_value()
+        self.grilla[self.grilla == self.tesoro.get_tipo()] = 0
+        self.grilla[pos_y_tesoro][pos_x_tesoro] = self.tesoro.get_tipo()
 
     def __str__(self):
         stringGrilla = ""
         for y in self.grilla:
             for x in y:
-                if x == 1:
+                if x == 0:
                     stringValue = "v"
-                elif x == self.jugador.get_value():
+                elif x == self.jugador.get_tipo():
                     stringValue = "j"
-                elif x == self.tesoro.get_value():
+                elif x == self.tesoro.get_tipo():
                     stringValue = "T"
-                elif x == -1:
+                elif x == self.obstaculo.get_tipo():
                     stringValue = "f"
                 stringGrilla = stringGrilla+stringValue+"  "
             stringGrilla = stringGrilla+"\n"

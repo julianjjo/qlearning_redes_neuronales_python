@@ -11,6 +11,8 @@ class Entorno():
         self.grid = grid
         self.grilla = self.grid.get_grilla()
         self.jugador = self.grid.get_jugador()
+        self.tesoro = self.grid.get_tesoro()
+        self.obstaculo = self.grid.get_obstaculo()
         self.factorDescuento = factorDescuento
         self.done = False
 
@@ -26,11 +28,11 @@ class Entorno():
             desface_hacia_arriba = pos_x > last_pos_x or pos_y > last_pos_y
             if desface_hacia_abajo or desface_hacia_arriba:
                 raise IndexError()
-            if self.grilla[pos_y][pos_x] == 3:
+            if self.grilla[pos_y][pos_x] == self.tesoro.get_tipo():
                 recompensa = 1
-            elif self.grilla[pos_y][pos_x] == 1:
+            elif self.grilla[pos_y][pos_x] == 0:
                 recompensa = -0.001
-            elif self.grilla[pos_y][pos_x] == -1:
+            elif self.grilla[pos_y][pos_x] == self.obstaculo.get_tipo():
                 recompensa = -1
             return recompensa
         except IndexError:
@@ -69,9 +71,9 @@ class Entorno():
     def se_termino(self):
         pos_x = self.jugador.get_posicion_x()
         pos_y = self.jugador.get_posicion_y()
-        if self.grilla[pos_y][pos_x] == 3:
+        if self.grilla[pos_y][pos_x] == self.tesoro.get_tipo():
             self.done = True
-        if self.grilla[pos_y][pos_x] == -1:
+        if self.grilla[pos_y][pos_x] == self.obstaculo.get_tipo():
             self.done = True
 
     def actuar(self):

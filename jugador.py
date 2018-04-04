@@ -6,7 +6,7 @@ class Jugador(ObjetoGrilla):
 
     def __init__(self, pos_x=0, pos_y=0):
         super().__init__(pos_x, pos_y)
-        self.set_value(2)
+        self.set_tipo(0.2)
 
     def get_posicion_prev_x(self):
         return self.pos_prev_x
