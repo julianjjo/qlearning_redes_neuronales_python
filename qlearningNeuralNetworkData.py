@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from grid import Grid
 from entorno import Entorno
+from pathlib import Path
 
 def main():
     minLearningRate = 0.1
@@ -14,16 +15,24 @@ def main():
     factorDescuento = 0.7
     episodios = 120000
     max_estados = 30
-    max_training_data = 6000
+    max_training_data = 1
     learningRate = np.linspace(minLearningRate, maxLearningRate, episodios)
     size_x = 7
     size_y = 7
     table = np.empty([size_y, size_x, 4])
     table.fill(0)
     grid = Grid(size_x, size_y)
-    input_training = []
-    output_data_positive = []
-    output_data_negative = []
+    my_file = Path("input_training.npy")
+    if my_file.is_file():
+        cargar = input('Cargar de Archivos y/n: ')
+        if cargar == "y":
+            input_training = np.load("input_training.npy")
+            output_data_positive = np.load("output_data_positive.npy")
+            output_data_negative = np.load("output_data_negative.npy")
+    else:
+        input_training = []
+        output_data_positive = []
+        output_data_negative = []
     for training in range(0, max_training_data):
         grid.set_random_grid()
         entorno = Entorno(grid, factorDescuento)
@@ -77,8 +86,8 @@ def main():
                         output_data_positive.append(q_value)
                     input_training.insert(len(input_training), input_train)
         np.save('input_training', np.asarray(input_training))
-        np.save('output_data_negative', np.asarray([output_data_negative]))
-        np.save('output_data_positive', np.asarray([output_data_positive]))
+        np.save('output_data_negative', np.asarray(output_data_negative))
+        np.save('output_data_positive', np.asarray(output_data_positive))
 
 
 if __name__ == '__main__':
