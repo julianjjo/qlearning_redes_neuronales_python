@@ -16,7 +16,7 @@ def main():
     factorDescuento = 0.7
     episodios = 120000
     max_estados = 30
-    max_training_data = 1
+    max_training_data = 6000
     learningRate = np.linspace(minLearningRate, maxLearningRate, episodios)
     size_x = 7
     size_y = 7
