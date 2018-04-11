@@ -23,7 +23,7 @@ def main():
     table = np.empty([size_y, size_x, 4])
     table.fill(0)
     grid = Grid(size_x, size_y)
-    my_file = Path("input_training.rb")
+    my_file = Path("input_training")
     if my_file.is_file():
         cargar = input('Cargar de Archivos y/n: ')
         if cargar == "y":
