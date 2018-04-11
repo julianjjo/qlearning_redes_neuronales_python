@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import copy
+import sys
 from jugador import Jugador
 from tesoro import Tesoro
 from obstaculo import Obstaculo
@@ -17,6 +18,7 @@ class Grid():
         self.jugador = Jugador()
         self.tesoro = Tesoro()
         self.obstaculo = Obstaculo()
+        sys.setrecursionlimit(5000)
 
     def get_grilla(self):
         return self.grilla

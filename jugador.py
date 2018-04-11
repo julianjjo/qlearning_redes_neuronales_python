@@ -37,3 +37,8 @@ class Jugador(ObjetoGrilla):
         self.pos_y = self.pos_initial_y
         self.pos_prev_x = self.pos_initial_x
         self.pos_prev_y = self.pos_initial_y
+
+    def is_inital_post(self):
+        if self.pos_initial_x == self.pos_x and self.pos_initial_y == self.pos_y:
+            return True
+        return False
