@@ -23,13 +23,16 @@ def main():
     table = np.empty([size_y, size_x, 4])
     table.fill(0)
     grid = Grid(size_x, size_y)
-    my_file = Path("input_training.npy")
+    my_file = Path("input_training.rb")
     if my_file.is_file():
         cargar = input('Cargar de Archivos y/n: ')
         if cargar == "y":
-            input_training = np.load("input_training.npy")
-            output_data_positive = np.load("output_data_positive.npy")
-            output_data_negative = np.load("output_data_negative.npy")
+            with open('output_data_positive', 'rb') as fp:
+                output_data_positive = pickle.load(fp)
+            with open('output_data_negative', 'rb') as fp:
+                output_data_negative = pickle.load(fp)
+            with open('input_training', 'rb') as fp:
+                input_training = pickle.load(fp)
     else:
         input_training = []
         output_data_positive = []
