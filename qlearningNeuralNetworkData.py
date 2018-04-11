@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import pickle
 from sklearn.externals import joblib
 from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import train_test_split
@@ -85,9 +86,12 @@ def main():
                         output_data_negative.append(0)
                         output_data_positive.append(q_value)
                     input_training.insert(len(input_training), input_train)
-        np.save('input_training', np.asarray(input_training))
-        np.save('output_data_negative', np.asarray(output_data_negative))
-        np.save('output_data_positive', np.asarray(output_data_positive))
+        with open('input_training', 'wb') as fp:
+            pickle.dump(input_training, fp)
+        with open('output_data_negative', 'wb') as fp:
+            pickle.dump(output_data_negative, fp)
+        with open('output_data_positive', 'wb') as fp:
+            pickle.dump(output_data_positive, fp)
 
 
 if __name__ == '__main__':
