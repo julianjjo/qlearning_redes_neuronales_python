@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import pickle
 from sklearn.externals import joblib
 from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import train_test_split
@@ -9,22 +10,17 @@ from grid import Grid
 from entorno import Entorno
 
 def main():
-    minLearningRate = 0.1
-    maxLearningRate = 1.0
-    factorDescuento = 0.7
-    episodios = 120000
-    max_estados = 30
-    max_training_data = 6000
-    learningRate = np.linspace(minLearningRate, maxLearningRate, episodios)
     size_x = 7
     size_y = 7
     table = np.empty([size_y, size_x, 4])
     table.fill(0)
-    grid = Grid(size_x, size_y)
 
-    output_data_positive = np.load("output_data_positive")
-    output_data_negative = np.load("output_data_negative")
-    input_training = np.load("input_training")
+    with open('output_data_positive', 'rb') as fp:
+        output_data_positive = pickle.load(fp)
+    with open('output_data_negative', 'rb') as fp:
+        output_data_negative = pickle.load(fp)
+    with open('input_training', 'rb') as fp:
+        input_training = pickle.load(fp)
     data_train_positive = input_training
     data_train_negative = input_training
     data_train_positive = np.concatenate((
