@@ -21,6 +21,9 @@ def main():
         output_data_negative = pickle.load(fp)
     with open('input_training', 'rb') as fp:
         input_training = pickle.load(fp)
+    output_data_positive = np.asarray([output_data_positive])
+    output_data_negative = np.asarray([output_data_negative])
+    input_training = np.asarray(input_training)
     data_train_positive = input_training
     data_train_negative = input_training
     data_train_positive = np.concatenate((
