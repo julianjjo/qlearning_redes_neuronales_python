@@ -14,7 +14,7 @@ def main():
     minLearningRate = 0.1
     maxLearningRate = 1.0
     factorDescuento = 0.7
-    episodios = 10000
+    episodios = 15000
     max_estados = 30
     max_training_data = 6000
     learningRate = np.linspace(minLearningRate, maxLearningRate, episodios)
@@ -83,7 +83,6 @@ def main():
                     input_train = input_train.tolist()
                     input_train.append(accion/10)
                     q_value = table[jugador.get_posicion_y()][jugador.get_posicion_x()][accion]
-                    time.sleep(1)
                     if q_value < 0:
                         output_data_negative.append(abs(q_value))
                         output_data_positive.append(0)

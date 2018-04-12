@@ -8,11 +8,11 @@ def main():
     minLearningRate = 0.1
     maxLearningRate = 1.0
     factorDescuento = 0.8
-    episodios = 100000
+    episodios = 10000
     max_estados = 100
     learningRate = np.linspace(minLearningRate, maxLearningRate, episodios)
-    size_x = 7
-    size_y = 7
+    size_x = 4
+    size_y = 5
     table = np.empty([size_y, size_x, 4])
     table.fill(0)
     grid = Grid(size_x, size_y)

@@ -36,26 +36,26 @@ def main():
     time.sleep(1)
 
     input_positive_train, input_positive_test, output_positive_train, output_positive_test = train_test_split(
-        data_train_positive[:, 0:50], data_train_positive[:, 50:51].ravel(),
+        data_train_positive[:, 0:21], data_train_positive[:, 21:22].ravel(),
         test_size=0.30
     )
 
     input_negative_train, input_negative_test, output_negative_train, output_negative_test = train_test_split(
-        data_train_negative[:, 0:50], data_train_negative[:, 50:51].ravel(),
+        data_train_negative[:, 0:21], data_train_negative[:, 21:22].ravel(),
         test_size=0.30
     )
 
     modelPostive = MLPRegressor(
         activation='identity',
-        max_iter=90000000000000,
+        max_iter=900000000000000,
         hidden_layer_sizes=(100, 100, 100),
-        learning_rate_init=0.0001,
+        learning_rate_init=0.0000001,
     )
     modelNegative = MLPRegressor(
         activation='identity',
-        max_iter=90000000000000,
+        max_iter=900000000000000,
         hidden_layer_sizes=(100, 100, 100),
-        learning_rate_init=0.0001,
+        learning_rate_init=0.0000001,
     )
 
     modelPostive.fit(input_positive_train, output_positive_train)

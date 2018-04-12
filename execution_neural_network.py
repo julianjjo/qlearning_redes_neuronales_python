@@ -17,8 +17,8 @@ def main():
     print("Probar Red Neuronal")
     time.sleep(1)
     max_estados = 40
-    size_x = 7
-    size_y = 7
+    size_x = 4
+    size_y = 5
     grid = Grid(size_x, size_y)
     modelPostive = joblib.load("modelPostive.nw")
     modelNegative = joblib.load("modelNegative.nw")
@@ -40,6 +40,8 @@ def main():
             input_value = np.asarray([input_value])
             q_value_positive = modelPostive.predict(input_value)
             q_value_negative = modelNegative.predict(input_value)
+            print(q_value_positive)
+            print(q_value_negative)
             acciones.append(get_q_tipo(q_value_positive, q_value_negative))
         acciones = np.asarray(acciones)
         print(grid)
