@@ -11,9 +11,9 @@ def main():
     print("Cantidad de output_data_negative: {}".format(len(output_data_negative)))
     print("Cantidad de input_training: {}".format(len(input_training)))
 
-    print(input_training[103])
-    print(output_data_positive[103])
-    print(output_data_negative[103])
+    # print(input_training[103])
+    # print(output_data_positive[103])
+    # print(output_data_negative[103])
 
 
 if __name__ == '__main__':
