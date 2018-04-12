@@ -14,12 +14,12 @@ def main():
     minLearningRate = 0.1
     maxLearningRate = 1.0
     factorDescuento = 0.7
-    episodios = 120000
+    episodios = 10000
     max_estados = 30
     max_training_data = 6000
     learningRate = np.linspace(minLearningRate, maxLearningRate, episodios)
-    size_x = 7
-    size_y = 7
+    size_x = 4
+    size_y = 5
     table = np.empty([size_y, size_x, 4])
     table.fill(0)
     grid = Grid(size_x, size_y)
@@ -33,6 +33,10 @@ def main():
                 output_data_negative = pickle.load(fp)
             with open('input_training', 'rb') as fp:
                 input_training = pickle.load(fp)
+        else:
+            input_training = []
+            output_data_positive = []
+            output_data_negative = []
     else:
         input_training = []
         output_data_positive = []
@@ -66,8 +70,8 @@ def main():
         print("Maxima Recompensa: {} Entrenamiento: {}".format(maximaRecompensa, training))
         grid.set_grilla(grid.get_initial_grid())
         jugador.reset_to_inital_post()
-        for post_x in range(0, size_y):
-            for post_y in range(0, size_x):
+        for post_y in range(0, size_y):
+            for post_x in range(0, size_x):
                 for accion in range(0, 4):
                     jugador.set_posicion_prev_x(post_x)
                     jugador.set_posicion_prev_y(post_y)
@@ -78,10 +82,8 @@ def main():
                     input_train = grilla.reshape(size_y*size_x)
                     input_train = input_train.tolist()
                     input_train.append(accion/10)
-                    entorno = Entorno(grid)
-                    entorno.set_accion(accion)
-                    recompensa, done = entorno.actuar()
-                    q_value = table[jugador.get_posicion_prev_y()][jugador.get_posicion_prev_x()][action]
+                    q_value = table[jugador.get_posicion_y()][jugador.get_posicion_x()][accion]
+                    time.sleep(1)
                     if q_value < 0:
                         output_data_negative.append(abs(q_value))
                         output_data_positive.append(0)

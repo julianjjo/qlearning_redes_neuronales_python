@@ -10,8 +10,8 @@ from grid import Grid
 from entorno import Entorno
 
 def main():
-    size_x = 7
-    size_y = 7
+    size_x = 4
+    size_y = 5
     table = np.empty([size_y, size_x, 4])
     table.fill(0)
 
