@@ -47,15 +47,15 @@ def main():
 
     modelPostive = MLPRegressor(
         activation='identity',
-        max_iter=900000000000000,
+        max_iter=9000000000000000,
         hidden_layer_sizes=(100, 100, 100),
-        learning_rate_init=0.0000001,
+        learning_rate_init=0.00000001,
     )
     modelNegative = MLPRegressor(
         activation='identity',
-        max_iter=900000000000000,
+        max_iter=9000000000000000,
         hidden_layer_sizes=(100, 100, 100),
-        learning_rate_init=0.0000001,
+        learning_rate_init=0.00000001,
     )
 
     modelPostive.fit(input_positive_train, output_positive_train)
