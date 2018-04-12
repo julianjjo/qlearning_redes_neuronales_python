@@ -173,10 +173,6 @@ class Grid():
         self.grilla = self.initial_grid.copy()
         self.grilla[self.grilla == self.jugador.get_tipo()] = 0
         self.grilla[pos_y_player][pos_x_player] = self.jugador.get_tipo()
-        pos_x_tesoro = self.tesoro.get_posicion_x()
-        pos_y_tesoro = self.tesoro.get_posicion_y()
-        self.grilla[self.grilla == self.tesoro.get_tipo()] = 0
-        self.grilla[pos_y_tesoro][pos_x_tesoro] = self.tesoro.get_tipo()
 
     def __str__(self):
         stringGrilla = ""
