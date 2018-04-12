@@ -74,13 +74,13 @@ def main():
                     jugador.set_posicion_x(post_x)
                     jugador.set_posicion_y(post_y)
                     grid.update_grid()
-                    entorno = Entorno(grid)
-                    entorno.set_accion(accion)
-                    recompensa, done = entorno.actuar()
                     grilla = grid.get_grilla()
                     input_train = grilla.reshape(size_y*size_x)
                     input_train = input_train.tolist()
                     input_train.append(accion/10)
+                    entorno = Entorno(grid)
+                    entorno.set_accion(accion)
+                    recompensa, done = entorno.actuar()
                     q_value = table[jugador.get_posicion_prev_y()][jugador.get_posicion_prev_x()][action]
                     if q_value < 0:
                         output_data_negative.append(abs(q_value))
