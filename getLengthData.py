@@ -11,7 +11,7 @@ def main():
     print("Cantidad de output_data_negative: {}".format(len(output_data_negative)))
     print("Cantidad de input_training: {}".format(len(input_training)))
 
-    for i in range(0, 20):
+    for i in range(0, 80):
         print(input_training[i])
         print(output_data_positive[i])
         print(output_data_negative[i])

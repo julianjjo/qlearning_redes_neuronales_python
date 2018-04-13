@@ -1,11 +1,5 @@
 import numpy as np
-import time
 import pickle
-from sklearn.externals import joblib
-from sklearn.neural_network import MLPRegressor
-from sklearn.model_selection import train_test_split
-import pandas as pd
-import matplotlib.pyplot as plt
 from grid import Grid
 from entorno import Entorno
 from pathlib import Path
@@ -70,26 +64,33 @@ def main():
         print("Maxima Recompensa: {} Entrenamiento: {}".format(maximaRecompensa, training))
         grid.set_grilla(grid.get_initial_grid())
         jugador.reset_to_inital_post()
+        tesoro = grid.get_tesoro()
+        obstaculo = grid.get_obstaculo()
         for post_y in range(0, size_y):
             for post_x in range(0, size_x):
-                for accion in range(0, 4):
-                    jugador.set_posicion_prev_x(post_x)
-                    jugador.set_posicion_prev_y(post_y)
-                    jugador.set_posicion_x(post_x)
-                    jugador.set_posicion_y(post_y)
-                    grid.update_grid()
-                    grilla = grid.get_grilla()
-                    input_train = grilla.reshape(size_y*size_x)
-                    input_train = input_train.tolist()
-                    input_train.append(accion/10)
-                    q_value = table[jugador.get_posicion_y()][jugador.get_posicion_x()][accion]
-                    if q_value < 0:
-                        output_data_negative.append(abs(q_value))
-                        output_data_positive.append(0)
-                    else:
-                        output_data_negative.append(0)
-                        output_data_positive.append(q_value)
-                    input_training.insert(len(input_training), input_train)
+                grid.update_grid()
+                grilla = grid.get_grilla()
+                if (grilla[post_y][post_x] != tesoro.get_tipo()
+                        and grilla[post_y][post_x] != obstaculo.get_tipo()):
+                    for accion in range(0, 4):
+                        jugador.set_posicion_prev_x(post_x)
+                        jugador.set_posicion_prev_y(post_y)
+                        jugador.set_posicion_x(post_x)
+                        jugador.set_posicion_y(post_y)
+                        grid.update_grid()
+                        grilla = grid.get_grilla()
+                        input_train = grilla.reshape(size_y*size_x)
+                        input_train = input_train.tolist()
+                        input_train.append(accion/10)
+                        q_value = table[post_y][post_x][accion]
+                        q_value = round(q_value, 1)
+                        if q_value < 0:
+                            output_data_negative.append(float(abs(q_value)))
+                            output_data_positive.append(float(0))
+                        else:
+                            output_data_negative.append(float(0))
+                            output_data_positive.append(float(q_value))
+                        input_training.insert(len(input_training), input_train)
         with open('input_training', 'wb') as fp:
             pickle.dump(input_training, fp)
         with open('output_data_negative', 'wb') as fp:
