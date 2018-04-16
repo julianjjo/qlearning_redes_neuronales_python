@@ -84,7 +84,7 @@ def main():
                         input_train.append(accion/10)
                         q_value = table[post_y][post_x][accion]
                         q_value = round(q_value, 1)
-                        if q_value < 0:
+                        if q_value <= 0:
                             output_data_negative.append(float(abs(q_value)))
                             output_data_positive.append(float(0))
                         else:
