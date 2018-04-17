@@ -10,7 +10,7 @@ def main():
     factorDescuento = 0.7
     episodios = 15000
     max_estados = 30
-    max_training_data = 6000
+    max_training_data = 1000
     learningRate = np.linspace(minLearningRate, maxLearningRate, episodios)
     size_x = 4
     size_y = 5
@@ -21,20 +21,16 @@ def main():
     if my_file.is_file():
         cargar = input('Cargar de Archivos y/n: ')
         if cargar == "y":
-            with open('output_data_positive', 'rb') as fp:
-                output_data_positive = pickle.load(fp)
-            with open('output_data_negative', 'rb') as fp:
-                output_data_negative = pickle.load(fp)
+            with open('output_data', 'rb') as fp:
+                output_data = pickle.load(fp)
             with open('input_training', 'rb') as fp:
                 input_training = pickle.load(fp)
         else:
             input_training = []
-            output_data_positive = []
-            output_data_negative = []
+            output_data = []
     else:
         input_training = []
-        output_data_positive = []
-        output_data_negative = []
+        output_data = []
     for training in range(0, max_training_data):
         grid.set_random_grid()
         entorno = Entorno(grid, factorDescuento)
@@ -85,18 +81,20 @@ def main():
                         q_value = table[post_y][post_x][accion]
                         q_value = round(q_value, 1)
                         if q_value <= 0:
-                            output_data_negative.append(float(abs(q_value)))
-                            output_data_positive.append(float(0))
+                            value = []
+                            value.append(float(abs(q_value)))
+                            value.append(float(0))
+                            output_data.append(value)
                         else:
-                            output_data_negative.append(float(0))
-                            output_data_positive.append(float(q_value))
+                            value = []
+                            value.append(float(0))
+                            value.append(float(q_value))
+                            output_data.append(value)
                         input_training.insert(len(input_training), input_train)
         with open('input_training', 'wb') as fp:
             pickle.dump(input_training, fp)
-        with open('output_data_negative', 'wb') as fp:
-            pickle.dump(output_data_negative, fp)
-        with open('output_data_positive', 'wb') as fp:
-            pickle.dump(output_data_positive, fp)
+        with open('output_data', 'wb') as fp:
+            pickle.dump(output_data, fp)
 
 
 if __name__ == '__main__':
