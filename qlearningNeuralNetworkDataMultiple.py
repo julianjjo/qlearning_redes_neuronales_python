@@ -1,8 +1,11 @@
 import numpy as np
 import pickle
+import random
 from grid import Grid
 from entorno import Entorno
 from pathlib import Path
+from sklearn.externals import joblib
+from sklearn.neural_network import MLPRegressor
 
 def main():
     minLearningRate = 0.1
@@ -10,7 +13,7 @@ def main():
     factorDescuento = 0.7
     episodios = 15000
     max_estados = 30
-    max_training_data = 100
+    max_training_data = 1000
     learningRate = np.linspace(minLearningRate, maxLearningRate, episodios)
     size_x = 4
     size_y = 5
@@ -25,13 +28,9 @@ def main():
                 output_data = pickle.load(fp)
             with open('input_training', 'rb') as fp:
                 input_training = pickle.load(fp)
-        else:
-            input_training = []
-            output_data = []
-    else:
+    for training in range(0, max_training_data):
         input_training = []
         output_data = []
-    for training in range(0, max_training_data):
         grid.set_random_grid()
         print(grid)
         entorno = Entorno(grid, factorDescuento)
@@ -92,13 +91,26 @@ def main():
                             value.append(float(q_value))
                             output_data.append(value)
                         input_training.insert(len(input_training), input_train)
-        with open('input_training', 'wb') as fp:
-            pickle.dump(input_training, fp)
-        with open('output_data', 'wb') as fp:
-            pickle.dump(output_data, fp)
-        grid.set_grilla(grid.get_initial_grid())
-        with open('grilla', 'wb') as fp:
-            pickle.dump(grid, fp)
+        data_len = len(output_data)
+        output_data = np.asarray(output_data)
+        input_training = np.asarray(input_training)
+        print("Entrenar Red Neuronal")
+        model = MLPRegressor(
+            activation='logistic',
+            solver='lbfgs',
+            hidden_layer_sizes=(20, 20),
+        )
+        error_minimal = True
+        while error_minimal:
+            model.fit(input_training, output_data)
+            index_rand = random.randrange(0, data_len)
+            input_value = np.asarray([input_training[index_rand]])
+            q_value = model.predict(input_value)
+            real_q_value = np.asarray([output_data[index_rand]])
+            if abs(q_value[0][0] - real_q_value[0][0]) < 0.01 and (
+                    abs(q_value[0][1] - real_q_value[0][1]) < 0.01):
+                error_minimal = False
+        joblib.dump(model, "model.nw")
 
 
 if __name__ == '__main__':

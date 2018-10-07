@@ -37,9 +37,9 @@ def main():
             action = entorno.get_accion()
             recompensa, done = entorno.actuar()
             if done is True:
-                table[jugador.get_posicion_prev_y()][jugador.get_posicion_prev_x()][action] = recompensa;
+                table[jugador.get_posicion_prev_y()][jugador.get_posicion_prev_x()][action] = round(recompensa, 1);
             else:
-                table[jugador.get_posicion_prev_y()][jugador.get_posicion_prev_x()][action] += learningRate[episodio] * (recompensa + factorDescuento * np.amax(table[jugador.get_posicion_y()][jugador.get_posicion_x()]) - table[jugador.get_posicion_prev_y()][jugador.get_posicion_prev_x()][action]);
+                table[jugador.get_posicion_prev_y()][jugador.get_posicion_prev_x()][action] += round(learningRate[episodio] * (recompensa + factorDescuento * np.amax(table[jugador.get_posicion_y()][jugador.get_posicion_x()]) - table[jugador.get_posicion_prev_y()][jugador.get_posicion_prev_x()][action]), 1);
             recompensaEpisodio = recompensaEpisodio + recompensa
             if done is True:
                 break

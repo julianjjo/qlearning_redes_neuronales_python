@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import pickle
 from sklearn.externals import joblib
 from grid import Grid
 from entorno import Entorno
@@ -27,6 +28,9 @@ def main():
         parar = input('Parar y/n: ')
         if parar == "y":
             break
+    # with open('grilla', 'rb') as fp:
+    #     grid = pickle.load(fp)
+    #     print(grid)
     recompensaPrueba = 0
     for i in range(0, max_estados):
         acciones = []
