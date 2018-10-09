@@ -4,13 +4,14 @@ from grid import Grid
 from entorno import Entorno
 from pathlib import Path
 
+
 def main():
     minLearningRate = 0.1
     maxLearningRate = 1.0
     factorDescuento = 0.7
     episodios = 15000
     max_estados = 30
-    max_training_data = 100
+    max_training_data = 1000
     learningRate = np.linspace(minLearningRate, maxLearningRate, episodios)
     size_x = 4
     size_y = 5
@@ -33,7 +34,6 @@ def main():
         output_data = []
     for training in range(0, max_training_data):
         grid.set_random_grid()
-        print(grid)
         entorno = Entorno(grid, factorDescuento)
         jugador = grid.get_jugador()
         maximaRecompensa = -1000
@@ -81,7 +81,7 @@ def main():
                         input_train.append(accion/10)
                         q_value = table[post_y][post_x][accion]
                         q_value = round(q_value, 3)
-                        if q_value <= 0:
+                        if q_value < 0:
                             value = []
                             value.append(float(abs(q_value)))
                             value.append(float(0))

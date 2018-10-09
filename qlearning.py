@@ -60,6 +60,7 @@ def main():
     for i in range(0, max_estados):
         entorno = Entorno(grid, factorDescuento)
         action = entorno.get_accion_predict(table)
+        print(action)
         recompensa, done = entorno.actuar()
         print(grid)
         time.sleep(1)

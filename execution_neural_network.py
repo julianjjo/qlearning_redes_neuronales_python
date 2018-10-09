@@ -4,6 +4,7 @@ import pickle
 from sklearn.externals import joblib
 from grid import Grid
 from entorno import Entorno
+from keras.models import model_from_json
 
 
 def get_q_tipo(q_value_array):
@@ -17,11 +18,19 @@ def get_q_tipo(q_value_array):
 def main():
     print("Probar Red Neuronal")
     time.sleep(1)
-    max_estados = 40
+    max_estados = 30
     size_x = 4
     size_y = 5
     grid = Grid(size_x, size_y)
-    model = joblib.load("model.nw")
+    # model = joblib.load("model.nw")
+    # load json and create model
+    json_file = open('model.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    model = model_from_json(loaded_model_json)
+    # load weights into new model
+    model.load_weights("model.h5")
+    print("Loaded model from disk")
     while True:
         grid.set_random_grid()
         print(grid)
@@ -30,10 +39,10 @@ def main():
             break
     # with open('grilla', 'rb') as fp:
     #     grid = pickle.load(fp)
-    #     print(grid)
     recompensaPrueba = 0
     for i in range(0, max_estados):
         acciones = []
+        entorno = Entorno(grid)
         for accion in range(0, 4):
             grilla = grid.get_grilla()
             input_value = []
@@ -42,13 +51,13 @@ def main():
             input_value.append(accion/10)
             input_value = np.asarray([input_value])
             q_value = model.predict(input_value)
-            print(q_value)
             acciones.append(get_q_tipo(q_value))
         acciones = np.asarray(acciones)
         print(grid)
         time.sleep(1)
+        print(acciones)
         accion = np.argmax(acciones)
-        entorno = Entorno(grid)
+        print(accion)
         entorno.set_accion(accion)
         recompensa, done = entorno.actuar()
         recompensaPrueba += recompensa

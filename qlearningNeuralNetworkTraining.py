@@ -4,11 +4,13 @@ import pickle
 import random
 from sklearn.externals import joblib
 from sklearn.neural_network import MLPRegressor
+from sklearn.model_selection import train_test_split
 
 
 def main():
     size_x = 4
     size_y = 5
+    maximo_n_mininal = 1
     table = np.empty([size_y, size_x, 4])
     table.fill(0)
 
@@ -17,29 +19,26 @@ def main():
     with open('input_training', 'rb') as fp:
         input_training = pickle.load(fp)
     data_len = len(output_data)
+    print(data_len)
     output_data = np.asarray(output_data)
     input_training = np.asarray(input_training)
-    print(input_training)
-    print(output_data)
+
     print("Entrenar Red Neuronal")
     time.sleep(1)
 
     model = MLPRegressor(
-        activation='logistic',
-        solver='lbfgs',
-        hidden_layer_sizes=(20, 20),
+        hidden_layer_sizes=(70, 50, 50, 40, 30, 30, 21, 10, 4),
     )
+    # model = joblib.load("model.nw")
     error_minimal = True
+    count = 0
     while error_minimal:
-        model.fit(input_training, output_data)
-        index_rand = random.randrange(0, data_len)
-        input_value = np.asarray([input_training[index_rand]])
-        q_value = model.predict(input_value)
-        real_q_value = np.asarray([output_data[index_rand]])
-        if abs(q_value[0][0] - real_q_value[0][0]) < 0.01 and (
-                abs(q_value[0][1] - real_q_value[0][1]) < 0.01):
+        model.partial_fit(input_training, output_data)
+        if count > 100:
             error_minimal = False
 
+    score = model.score(input_training, output_data)
+    print('score: {}'.format(score))
     joblib.dump(model, "model.nw")
 
 
