@@ -4,9 +4,11 @@ import pickle
 import random
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.layers import LSTM
+from keras.layers import Dropout
+from keras.optimizers import SGD
 from keras.utils import multi_gpu_model
-
+from keras.models import model_from_json
+import matplotlib.pyplot as plt
 
 def main():
     size_x = 4
@@ -20,23 +22,25 @@ def main():
     with open('input_training', 'rb') as fp:
         input_training = pickle.load(fp)
     data_len = len(output_data)
-    print(data_len)
     output_data = np.asarray(output_data)
     input_training = np.asarray(input_training)
-
     print("Entrenar Red Neuronal")
     time.sleep(1)
 
-    model = Sequential()
-    model.add(Dense(units=64, activation='relu', input_dim=21))
-    model.add(Dense(units=64, activation='relu'))
-    model.add(Dense(units=64, activation='relu'))
-    model.add(Dense(units=64, activation='relu'))
-    model.add(Dense(units=64, activation='relu'))
-    model.add(Dense(units=64, activation='relu'))
-    model.add(Dense(units=32, activation='relu'))
-    model.add(Dense(units=21, activation='relu'))
-    model.add(Dense(units=2, activation='softmax'))
+    # model = Sequential()
+    # model.add(Dense(units=60, activation='relu', input_dim=20))
+    # model.add(Dropout(0.5))
+    # model.add(Dense(units=30, activation='relu'))
+    # model.add(Dense(units=4, activation='softmax'))
+
+    # load json and create model
+    json_file = open('model.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    model = model_from_json(loaded_model_json)
+    # load weights into new model
+    model.load_weights("model.h5")
+    print("Loaded model from disk")
 
     try:
         model = multi_gpu_model(model, cpu_merge=False)
@@ -45,10 +49,12 @@ def main():
         print("Training using single GPU or CPU..")
 
     model.compile(
-        loss='mean_squared_error',
+        loss='categorical_crossentropy',
         optimizer='sgd',
         metrics=['accuracy'])
-    model.fit(input_training, output_data, epochs=350, batch_size=10, verbose=1)
+
+    model.fit(input_training, output_data, epochs=180000, batch_size=100, verbose=1)
+
     model_json = model.to_json()
     with open("model.json", "w") as json_file:
         json_file.write(model_json)

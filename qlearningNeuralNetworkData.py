@@ -11,7 +11,7 @@ def main():
     factorDescuento = 0.7
     episodios = 15000
     max_estados = 30
-    max_training_data = 1000
+    max_training_data = 1
     learningRate = np.linspace(minLearningRate, maxLearningRate, episodios)
     size_x = 4
     size_y = 5
@@ -69,7 +69,11 @@ def main():
                 grilla = grid.get_grilla()
                 if (grilla[post_y][post_x] != tesoro.get_tipo()
                         and grilla[post_y][post_x] != obstaculo.get_tipo()):
-                    for accion in range(0, 4):
+                    q_values = table[post_y][post_x]
+                    q_values = q_values.clip(min=0)
+                    q_values = [ 1 if x == np.max(q_values) and x > 0 else 0 for x in q_values ]
+                    q_values = np.round(q_values, decimals=3)
+                    if all(q_value == 0 for q_value in q_values) is False:
                         jugador.set_posicion_prev_x(post_x)
                         jugador.set_posicion_prev_y(post_y)
                         jugador.set_posicion_x(post_x)
@@ -78,19 +82,7 @@ def main():
                         grilla = grid.get_grilla()
                         input_train = grilla.reshape(size_y*size_x)
                         input_train = input_train.tolist()
-                        input_train.append(accion/10)
-                        q_value = table[post_y][post_x][accion]
-                        q_value = round(q_value, 3)
-                        if q_value < 0:
-                            value = []
-                            value.append(float(abs(q_value)))
-                            value.append(float(0))
-                            output_data.append(value)
-                        else:
-                            value = []
-                            value.append(float(0))
-                            value.append(float(q_value))
-                            output_data.append(value)
+                        output_data.append(q_values.tolist())
                         input_training.insert(len(input_training), input_train)
         with open('input_training', 'wb') as fp:
             pickle.dump(input_training, fp)
